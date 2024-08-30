@@ -15,6 +15,10 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}})
 asgi_app = WsgiToAsgi(app)
 
 
+@app.route('/healthz', methods=['GET'])
+def health_check():
+    return 'OK'
+    
 @app.route("/api/v1/professional/getCADetails", methods=["POST"])
 def getCADetails():
     try:
