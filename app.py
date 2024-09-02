@@ -6,13 +6,12 @@ import uuid
 import json
 import re
 import base64
-from asgiref.wsgi import WsgiToAsgi
 import pprint
 from flask_cors import CORS
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
-asgi_app = WsgiToAsgi(app)
+# asgi_app = WsgiToAsgi(app)
 
 
 @app.route('/healthz', methods=['GET'])
@@ -2145,7 +2144,3 @@ def saveEntity():
     except Exception as e:
         print(e)
         return jsonify({"error": str(e)})
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(asgi_app, host='0.0.0.0', port=5001)
