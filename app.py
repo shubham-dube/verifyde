@@ -8,10 +8,11 @@ import re
 import base64
 import pprint
 from flask_cors import CORS
+from asgiref.wsgi import WsgiToAsgi
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
-# asgi_app = WsgiToAsgi(app)
+asgi_app = WsgiToAsgi(app)
 
 
 @app.route('/healthz', methods=['GET'])
@@ -1207,8 +1208,13 @@ def getVCChallanDetails():
         sessionId = request.json.get("sessionId")
         vehicleNo = request.json.get("vehicleNo")
         captcha = request.json.get("captcha")
+        print(sessionId)
+        print(captcha)
+        print(vehicleNo)
 
         user = VCsessions.get(sessionId)
+        if user is None:
+            return jsonify({"error": "Invalid Session. Please try again"})
 
         session = user['session']
         if session is None:
@@ -1227,7 +1233,7 @@ def getVCChallanDetails():
             "https://vcourts.gov.in/virtualcourt/admin/mobilesearchajax.php",
             data=vehiclePostData,
         )
-
+        
         soup = BeautifulSoup(responseAfterCapctha.text, 'html.parser')
 
         viewBtns = soup.find_all('a', class_='viewDetlink')
@@ -2144,3 +2150,7 @@ def saveEntity():
     except Exception as e:
         print(e)
         return jsonify({"error": str(e)})
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, port=5000, host="0.0.0.0")
