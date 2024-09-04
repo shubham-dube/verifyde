@@ -8,7 +8,7 @@ import re
 import base64
 import pprint
 from flask_cors import CORS
-from asgiref.wsgi import WsgiToAsgi
+# from asgiref.wsgi import WsgiToAsgi
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
